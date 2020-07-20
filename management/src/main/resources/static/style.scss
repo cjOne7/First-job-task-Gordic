@@ -1,0 +1,196 @@
+$mainFont: Century Gothic,
+sans-serif;
+$border: 1px solid #A7A1AE;
+$padding: 5px 5px 5px 5px;
+$bgColorh2th: #172035;
+$tableTextAlign: center;
+$hoverBg: #29196d;
+
+* {
+    font-family: $mainFont;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #A7A1AE;
+    background-color: #1F2739;
+}
+
+h2 {
+    font-weight: 300;
+    text-align: $tableTextAlign;
+    color: #4DC3FA;
+    margin-bottom: 0;
+    padding: $padding;
+    background-color: $bgColorh2th;
+}
+
+.container {
+    text-align: $tableTextAlign;
+    display: table;
+    margin: 0 auto;
+    width: 80%;
+    border-collapse: collapse;
+    border: $border;
+
+    tr {
+        line-height: 30px;
+    }
+
+    tr:hover {
+        background-color: #464A52;
+    }
+
+    th {
+        font-weight: bold;
+        text-align: $tableTextAlign;
+        padding: $padding;
+        font-size: 1.3em;
+        color: #185875;
+        background-color: $bgColorh2th;
+        border: $border;
+    }
+
+    td:hover {
+        span {
+            background-color: $hoverBg;
+        }
+
+        a {
+            background-color: $hoverBg;
+        }
+        background-color: $hoverBg;
+        font-weight: bold;
+    }
+
+    td:first-child {
+        color: #FB667A;
+    }
+
+    td {
+        text-align: $tableTextAlign;
+        border: $border;
+        padding: $padding;
+        white-space: nowrap;
+    }
+
+    tr:nth-child(odd) {
+        background-color: #232f44;
+    }
+}
+
+select {
+    font-size: 1.07em;
+    margin: 0 0 15px 0;
+}
+
+label {
+    margin-right: 5px;
+}
+
+#about {
+    width: 521px;
+    height: 130px;
+}
+
+button {
+    font-size: 16px;
+    width: 100px;
+    padding: $padding;
+}
+
+button:hover {
+    background-color: #464A52;
+    box-shadow: 5px 6px 6px 3px #0E1119;
+}
+
+fieldset {
+    width: 600px;
+}
+
+textarea {
+    vertical-align: top;
+    margin-top: 0;
+}
+
+@mixin checkField($content, $color) {
+    position: absolute;
+    content: $content;
+    margin-left: 5px;
+    margin-top: 9px;
+    padding: 0 4px 1px 4px;
+    color: $color;
+    border: $border;
+}
+
+input:invalid+span:after {
+    @include checkField('✖', red);
+}
+
+input:valid+span:after {
+    @include checkField('✓', green);
+}
+
+#infoText {
+    font-size: 10px;
+    margin: 1px 0 1px 0;
+    color: #177297;
+}
+
+
+.lightbox {
+    display: none;
+}
+
+/* Opening lightbox */
+.lightbox:target {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Containing lightbox  */
+.lightbox figcaption {
+    width: 25rem;
+    position: relative;
+    padding: 1.5em;
+    background-color: lightpink;
+}
+
+/* Close btn */
+.lightbox .close {
+    position: relative;
+    display: block;
+}
+
+.lightbox .close::after {
+    right: -1rem;
+    top: -1rem;
+    width: 2rem;
+    height: 2rem;
+    position: absolute;
+    display: flex;
+    z-index: 1;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    border-radius: 50%;
+    color: white;
+    content: "×";
+    cursor: pointer;
+}
+
+/* Lightbox wrap */
+.lightbox .close::before {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background-color: rgba(0, 0, 0, .7);
+    content: "";
+    cursor: default;
+}
