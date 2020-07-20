@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" type="text/html" http-equiv="Content-type">
+    <meta name="description" content="This is project for job">
+    <meta name="keywords" content="test, task, example, job">
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>First job task</title>
+</head>
+<body onload="checkDateOfBirth()">
+    <nav>
+        <a name="goTop"></a>
+        <a href="#createRecord">Create record</a>
+    </nav>
+
+    <table border="1" cellpadding="5px">
+        <caption>People</caption>
+        <thead>
+        <tr>
+            <th scope="col">Name&Surname</th>
+            <th scope="col">E-mail</th>
+            <th scope="col" align="middle">Date of birth</th>
+            <th scope="col">Sex</th>
+            <th scope="col">Education</th>
+            <th scope="col" width="100px">About</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="person, counter : ${personsInfo}">
+            <td th:text="${person.getName()}"></td>
+            <td th:text="${person.getEmail()}"></td>
+            <td th:text="${person.getDateOfBirth()}" align="middle"></td>
+            <td th:text="${person.getSex()}"></td>
+            <td th:text="${person.getEducation()}"></td>
+            <td>
+                <span th:if="${person.isAboutFieldEmpty()}">No info</span>
+                <span th:unless="${person.isAboutFieldEmpty()}">
+                    <a th:href="'#about' + ${counter.count}">Open details</a><br>
+                    <div class="lightbox" th:id="'about' + ${counter.count}">
+                        <figure>
+                            <a href="#" class="close"></a>
+                            <figcaption th:text="${person.isAboutFieldEmpty()} ? 'No info' : ${person.about}"></figcaption>
+                        </figure>
+                    </div>
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <hr>
+    <form action="/" method="post">
+        <fieldset>
+            <legend>Adding person info:</legend>
+
+            <!-- The technique also requires a <span> element to be placed after the form element, which acts as a
+                holder for the icons. This was necessary because some input types on some browsers don't display icons
+                placed directly after them very well.
+            -->
+            <label for="name">Name and surname: </label>
+            <input type="text" name="name" id="name" required="required" placeholder="Name&Surname..." maxlength="60"
+                   oninput="myFunction()" pattern="(\w.+\s).+" onkeypress="return /[a-zA-Z ]/i.test(event.key)">
+            <span class="validity"></span><br>
+            <p id="infoText"></p>
+
+            <label for="email">E-mail: </label>
+            <input type="email" name="email" id="email" required="required"
+                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="E-mail..." maxlength="255">
+            <span class="validity"></span><br>
+
+            <label for="dateOfBirth">Date of birth: </label>
+            <input type="date" name="dateOfBirth" id="dateOfBirth" required="required" oninput="checkDateOfBirth(this)">
+            <span class="validity"></span><br>
+
+            <p>Sex:
+                <label for="sex">M:</label><input type="radio" name="sex" value="man" checked="checked">
+                <label for="sex">W:</label><input type="radio" name="sex" value="woman">
+            </p>
+            <select name="education" id="education">
+                <option value="Bez vzdělání">Bez vzdělání</option>
+                <option value="Neúplné základní vzdělání">Neúplné základní vzdělání</option>
+                <option value="Základní vzdělání">Základní vzdělání</option>
+                <optgroup label="Lower secondary education">
+                    <option value="Nižší střední vzdělání">Nižší střední vzdělání</option>
+                    <option value="Nižší střední odborné vzdělání">Nižší střední odborné vzdělání</option>
+                </optgroup>
+                <optgroup label="Secondary education">
+                    <option value="Střední odborné vzdělání s výučním listem">Střední odborné vzdělání s výučním listem
+                    </option>
+                    <option value="Střední nebo střední odborné vzdělání bez maturity i výučního listu">Střední nebo střední
+                        odborné vzdělání bez maturity i výučního listu
+                    </option>
+                    <option value="Úplné střední všeobecné vzdělání">Úplné střední všeobecné vzdělání</option>
+                    <option value="Úplné střední odborné vzdělání s vyučením i maturitou">Úplné střední odborné vzdělání s
+                        vyučením i maturitou
+                    </option>
+                    <option value="Úplné střední odborné vzdělání s maturitou (bez vyučení)">Úplné střední odborné vzdělání
+                        s maturitou (bez vyučení)
+                    </option>
+                </optgroup>
+                <optgroup label="High education">
+                    <option value="Vyšší odborné vzdělání">Vyšší odborné vzdělání</option>
+                    <option value="Vyšší odborné vzdělání v konzervatoři">Vyšší odborné vzdělání v konzervatoři</option>
+                    <option value="Vysokoškolské bakalářské vzdělání">Vysokoškolské bakalářské vzdělání</option>
+                    <option value="Vysokoškolské magisterské vzdělání">Vysokoškolské magisterské vzdělání</option>
+                    <option value="Vysokoškolské doktorské vzdělání">Vysokoškolské doktorské vzdělání</option>
+                </optgroup>
+            </select><br>
+            <label for="about">About: </label>
+            <textarea id="about" name="about" maxlength="500"></textarea><br>
+            <span id="remainingChars"></span><br>
+            <button type="submit" id="saveBtn" disabled="disabled">Save</button>
+            <nav>
+                <a href="#goTop">Go to top</a>
+                <a name="createRecord"></a>
+            </nav>
+        </fieldset>
+    </form>
+
+    <script type="text/javascript">
+        function checkDateOfBirth() {
+            const currentDate = new Date();
+            const month = currentDate.getMonth() + 1;
+            //build a date format like: yyyy-MM-dd. If month = 7, for correct work date.max must be 07
+            document.getElementById('dateOfBirth').max
+                = `${currentDate.getFullYear()}-${month < 10 ? `0${month}` : month}-${currentDate.getDate()}`;
+        }
+
+        const input = document.getElementById('about');
+        input.oninput = function () {
+            if (input.value === "") {
+                document.getElementById('remainingChars').innerHTML = "";
+            } else {
+                document.getElementById('remainingChars').innerHTML = "Characters remaining: " + (500 - input.value.length);
+            }
+        };
+
+        function wordCount(text) {
+            let totalCount = 0;
+            const words = text.split(' ');
+            words.forEach(function (word) {
+                if (word.length > 0) {
+                    totalCount++;
+                }
+            })
+            return totalCount;
+        }
+
+        window.myFunction = function () {
+            const nameField = document.getElementById('name');
+            const words = wordCount(nameField.value);
+            const button = document.getElementById('saveBtn');
+            if (words < 2) {
+                if (nameField.value === "") {
+                    document.getElementById('infoText').innerHTML = "";
+                } else {
+                    document.getElementById('infoText').innerHTML = "You need to type 2 words min";
+                }
+                button.disabled = true;
+            } else {
+                button.disabled = false;
+                document.getElementById('infoText').innerHTML = "";
+            }
+        }
+    </script>
+</body>
+</html>
